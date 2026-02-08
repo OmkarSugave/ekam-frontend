@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import api from "../api/api";
-import { FILE_BASE_URL } from "../utils/constants";
 import Card from "../components/Card";
 
 export default function FeesManagement() {
@@ -36,7 +35,7 @@ export default function FeesManagement() {
     }
   };
 
-  // ✅ ADMIN RESET FEES (DELETE RECEIPT)
+  // ✅ ADMIN RESET FEES
   const resetFees = async (id) => {
     if (!window.confirm("Reset fee status to UNPAID?")) return;
 
@@ -53,7 +52,6 @@ export default function FeesManagement() {
       <h1 className="text-2xl font-bold">Fees Management</h1>
 
       <Card className="space-y-4">
-        
         {players.map((p) => (
           <div
             key={p._id}
@@ -81,24 +79,20 @@ export default function FeesManagement() {
                 </span>
               </p>
 
-              {/* ✅ FIXED RECEIPT LINK */}
+              {/* ✅ CORRECT CLOUDINARY LINK */}
               {p.fees?.receiptUrl && (
-              <button
-  onClick={() => {
-    const url = `${FILE_BASE_URL}/${p.fees.receiptUrl.replace(/^\//, "")}`;
-    window.open(url, "_blank", "noopener,noreferrer");
-  }}
-  className="text-blue-600 underline text-sm"
->
-  View Receipt
-</button>
-
-
+                <a
+                  href={p.fees.receiptUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-600 underline text-sm"
+                >
+                  View Receipt
+                </a>
               )}
             </div>
 
             <div className="flex flex-col gap-2">
-              {/* VERIFY */}
               {p.fees?.status === "SUBMITTED" && (
                 <button
                   disabled={loading}
@@ -109,14 +103,12 @@ export default function FeesManagement() {
                 </button>
               )}
 
-              {/* VERIFIED */}
               {p.fees?.status === "PAID" && (
                 <span className="text-green-600 font-semibold">
                   Verified ✔
                 </span>
               )}
 
-              {/* RESET */}
               {p.fees?.status !== "UNPAID" && (
                 <button
                   onClick={() => resetFees(p._id)}
