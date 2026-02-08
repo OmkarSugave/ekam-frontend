@@ -10,7 +10,7 @@ export default function PlayerSchedule() {
     const load = async () => {
       try {
         const res = await api.get("/players/my-schedule");
-        setSchedule(res.data || []);
+        setSchedule(Array.isArray(res.data) ? res.data : []);
       } catch (err) {
         console.error(err);
         setError("Unable to load schedule");
@@ -34,11 +34,18 @@ export default function PlayerSchedule() {
         )}
 
         {schedule.map((s) => (
-          <div key={s._id} className="border p-3 rounded">
-            <p className="font-semibold">{s.day}</p>
-            <p className="text-sm">
-              {s.startTime} – {s.endTime}
-            </p>
+          <div
+            key={s._id}
+            className="border p-4 rounded space-y-1"
+          >
+            <p className="font-semibold">Day: {s.day}</p>
+            <p className="text-sm">Time: {s.time}</p>
+
+            {s.goal && (
+              <p className="text-sm text-gray-600">
+                Goal: {s.goal}
+              </p>
+            )}
           </div>
         ))}
       </div>
